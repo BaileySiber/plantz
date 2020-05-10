@@ -9,7 +9,7 @@ const Home = () => (
       <header className="Home-header">
         <img src={plant} className="Home-logo" alt="logo" />
         <p>
-          The Greenhouse
+          The Greenhouse!
         </p>
 
         <button><Link to='/login'>click me!</Link></button>
