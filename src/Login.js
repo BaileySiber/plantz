@@ -3,9 +3,13 @@ import { Switch, Route } from 'react-router-dom'
 import './Login.css';
 
 const Login = () => (
-    <p>
-      Login :)
-    </p>
+  <div className="Login">
+    <header className="Login-header">
+      <p>
+        Login :)
+      </p>
+    </header>
+  </div>
 )
 
 export default Login

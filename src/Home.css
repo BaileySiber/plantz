@@ -1,8 +1,8 @@
-.App {
+.Home {
   text-align: center;
 }
 
-.App-logo {
+.Home-logo {
   height: 40vmin;
   pointer-events: none;
 }
@@ -13,7 +13,7 @@
   }
 } */
 
-.App-header {
+.Home-header {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -24,11 +24,11 @@
   color: white;
 }
 
-.App-link {
+.Home-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
+@keyframes Home-logo-spin {
   from {
     transform: rotate(0deg);
   }

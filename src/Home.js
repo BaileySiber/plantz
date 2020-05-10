@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom'
 
 
 const Home = () => (
-    <div className="App">
-      <header className="App-header">
-        <img src={plant} className="App-logo" alt="logo" />
+    <div className="Home">
+      <header className="Home-header">
+        <img src={plant} className="Home-logo" alt="logo" />
         <p>
           The Greenhouse
         </p>
