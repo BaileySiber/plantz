@@ -1,6 +1,8 @@
 import React from 'react'
 import plant from './plant.gif'
 import './Home.css';
+import { Link } from 'react-router-dom'
+
 
 const Home = () => (
     <div className="App">
@@ -9,14 +11,9 @@ const Home = () => (
         <p>
           The Greenhouse
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+
+        <button><Link to='/login'>click me!</Link></button>
+
       </header>
     </div>
 )
