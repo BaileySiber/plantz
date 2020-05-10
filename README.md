@@ -1,5 +1,5 @@
 # The Greenhouse 
-## a virtual space for your real life ~ plant friends ~
+`a virtual space for your real life ~ plant friends ~`
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
