@@ -14,7 +14,7 @@
     "react-scripts": "3.4.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently -k 'node server.js' 'react-scripts start'",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
