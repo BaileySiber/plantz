@@ -2,23 +2,31 @@ import React from 'react'
 import GoogleLogin from 'react-google-login';
 
 const loginSuccess = (response) => {
-  console.log(response);
-  fetch('https://thegreenhouse.herokuapp.com/login/user', {
+  console.log('in login success' + response.profileObj.name);
+  // fetch('https://thegreenhouse.herokuapp.com/login/user', {
+  fetch('http://localhost:3001/login/user', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      user: response.profileObj
+      name: response.profileObj.name,
+      email: response.profileObj.email
     })
   })
-  .then(resp => resp.json())
   .then(resp => {
-    console.log(resp)
+    if(resp.status === 201){
+      console.log('this was saved!')
+    }
+    else if(resp.status === 200){
+      console.log('dey exist silly')
+    }
   })
+  .catch(err => console.log('error saving user' + err))
 }
 
 const loginFailure = () => {
+
   window.confirm('Login failure! Try Again.')
 }
 
