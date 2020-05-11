@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json())
 
-app.post('/login', function (req, res) {
+app.post('/login/user', function (req, res) {
   console.log(req.body)
   new User(req.body)
     .save()

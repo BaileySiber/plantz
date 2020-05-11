@@ -3,7 +3,7 @@ import GoogleLogin from 'react-google-login';
 
 const loginSuccess = (response) => {
   console.log(response);
-  fetch('https://thegreenhouse.herokuapp.com/login', {
+  fetch('https://thegreenhouse.herokuapp.com/login/user', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
