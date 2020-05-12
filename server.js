@@ -13,14 +13,14 @@ app.use(bodyParser.json())
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
 
 
-// Creation of object connection for MongoDB User collection 
+// Creation of object connection for MongoDB User collection
 const User = mongoose.model('User', {
   name: String,
   email: String,
 })
 
 
-// Server method to handle user login 
+// Server method to handle user login
 app.post('/login/user', function (req, res) {
   console.log('in server.js /login/user')
 
