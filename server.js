@@ -94,7 +94,7 @@ app.delete('/greenhouse/plants', function(req, res){
 
     Plant.remove({'_id':req.body.id}).then((result) => {
       console.log("in plant remove")
-      res.send(202).json({"message":"plant successfully deleted"})
+      res.status(202).json({"message":"plant successfully deleted"})
 
     }).catch((err) => {
       console.log("failed to remove plant")
@@ -104,6 +104,35 @@ app.delete('/greenhouse/plants', function(req, res){
   }).catch((err) => {
     console.log("failed to find one")
     res.status(500).json({"error":err.message})
+  })
+
+});
+
+app.get('/greenhouse/plants', function(req, res){
+  console.log('in get plant func')
+
+  if(!req.body.user_email){
+    console.log("no email address provided")
+    res.status(400).json({"message":"bad request - no user email"})
+  }
+
+  User.findOne({ email: req.body.user_email }).then(result => {
+    console.log("in find user")
+    if(!result){
+      res.status(404).json({"message":"not found - user does not exist"})
+    }
+
+    Plant.find({ user_email: req.body.user_email }).then((result) => {
+      console.log("found all the plants!")
+      res.status(200).json(result)
+
+    }).catch((err) => {
+      res.status(500).json({"message":"failed to get the plants :("})
+    })
+
+  }).catch((err) => {
+    console.log("failed to find user")
+    res.status(500).json({"error": err.message})
   })
 
 });
