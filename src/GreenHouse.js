@@ -1,6 +1,7 @@
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import './GreenHouse.css';
+import Shelf from './Shelf.js';
 
 class GreenHouse extends React.Component {
 
@@ -51,16 +52,8 @@ class GreenHouse extends React.Component {
           </Modal.Footer>
         </Modal>
 
-        <div class="wrap">
-          <div class="base">
-            <div class="flowerpot"></div>
-            <div class="blade blade-center"></div>
-            <div class="blade blade-left-s"></div>
-            <div class="blade blade-right-s"></div>
-            <div class="blade blade-left-l"></div>
-            <div class="blade blade-right-l"></div>
-          </div>
-        </div>
+        <Shelf />
+
       </div>
     )
   }
