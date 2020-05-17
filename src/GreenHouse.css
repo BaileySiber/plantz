@@ -5,14 +5,57 @@
   font-style: normal;
   font-variant: normal;
   font-weight: 700;
-  line-height: 26.4px;
+  margin-top: 3%;
   color: #81b29a;
+}
+
+button {
+  padding: .4rem 1.2rem;
+  margin-right: 5%;
+  border-radius: 8px;
+  border: 0;
+  font-size: 1.8rem;
+  background-color: #eba084;
+  color: #fff;
+  cursor: pointer;
+  transition: all .3s ease-in-out;
+  float: right;
+}
+
+button:hover {
+  background-color: #f2bca0;
+  transform: scale(1.1);
+}
+
+button:focus{
+  outline: 0;
+}
+
+.primary {
+  background-color: #81b29a;
+  border-color: #81b29a;
+}
+
+.primary:hover {
+  background-color: #92C1AB;
+  border-color: #92C1AB;
+}
+
+.secondary {
+  background-color: #eba084;
+  border-color: #eba084;
+}
+
+.secondary:hover {
+  background-color: #f2bca0;
+  border-color: #eba084;
 }
 
 .wrap {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: 8%;
   height: 100vh;
 }
 
