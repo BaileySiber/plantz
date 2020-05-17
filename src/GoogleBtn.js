@@ -10,6 +10,7 @@ class GoogleSignIn extends React.Component {
     super(props);
     this.state={
       isLoggedIn: false,
+      email: '',
       name: ''
     }
   }
@@ -17,7 +18,7 @@ class GoogleSignIn extends React.Component {
   loginSuccess = (response) => {
     console.log('in login success' + response.profileObj.name);
     // fetch('https://thegreenhouse.herokuapp.com/login/user', {
-    this.setState({name:response.profileObj.name})
+    this.setState({name:response.profileObj.name, email:response.profileObj.email})
     fetch('http://localhost:3001/login/user', {
       method: 'POST',
       headers: {
@@ -54,7 +55,8 @@ class GoogleSignIn extends React.Component {
 
           ?
 
-          <Redirect to='/greenhouse' />
+          <Redirect
+            to={{ pathname: '/greenhouse', state: { user_email: this.state.email } }} />
 
           :
 

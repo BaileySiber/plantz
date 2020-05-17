@@ -8,7 +8,7 @@ class GreenHouse extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      show: false,
+      user_email: this.props.location.state.user_email
     }
   }
 
@@ -20,12 +20,40 @@ class GreenHouse extends React.Component {
     this.setState({show:false})
   }
 
+  componentDidMount = () => {
+    console.log("getting ze plants")
+    fetch('http://localhost:3001/greenhouse/plants/' + this.state.user_email, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(response => {
+
+      if (response.status === 200) {
+        console.log('le plants have been found!')
+
+        response.json().then(response => {
+          console.log("we got dem plantz")
+          this.setState({plants: response})
+        }).catch(err => {
+          console.log("error parsing response :'(" + err)
+        })
+
+      }
+    }).catch(err => {
+      console.log('error saving message' + err)
+    })
+
+}
+
   addPlant = () => {
     console.log("adding a new plant!")
     this.setState({show:false})
   }
 
   render() {
+
     return(
 
       <div>
@@ -52,7 +80,7 @@ class GreenHouse extends React.Component {
           </Modal.Footer>
         </Modal>
 
-        <Shelf />
+        <Shelf dataFromParent = {this.state.plants} />
 
       </div>
     )

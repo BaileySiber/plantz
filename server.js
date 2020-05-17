@@ -108,22 +108,22 @@ app.delete('/greenhouse/plants', function(req, res){
 
 });
 
-app.get('/greenhouse/plants', function(req, res){
+app.get('/greenhouse/plants/:user_email', function(req, res){
   console.log('in get plant func')
 
-  if(!req.body.user_email){
+  if(!req.params.user_email){
     console.log("no email address provided")
     res.status(400).json({"message":"bad request - no user email"})
   }
 
-  User.findOne({ email: req.body.user_email }).then(result => {
+  User.findOne({ email: req.params.user_email }).then(result => {
     console.log("in find user")
     if(!result){
       res.status(404).json({"message":"not found - user does not exist"})
     }
 
-    Plant.find({ user_email: req.body.user_email }).then((result) => {
-      console.log("found all the plants!")
+    Plant.find({ user_email: req.params.user_email }).then((result) => {
+      console.log("found all the plants!" + result)
       res.status(200).json(result)
 
     }).catch((err) => {
