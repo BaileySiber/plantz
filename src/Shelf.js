@@ -2,6 +2,7 @@ import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import './Shelf.css';
 import Succulent from './Succulent.js'
+import Leafy from './Leafy.js'
 
 class Shelf extends React.Component {
 
@@ -13,7 +14,7 @@ class Shelf extends React.Component {
   }
 
   render() {
-    const shelf_plants = this.props.dataFromParent
+    const shelf_plants = this.props.plants
     const rendered_plants = []
 
     for (const index in shelf_plants){
@@ -21,15 +22,19 @@ class Shelf extends React.Component {
 
       console.log(plant)
 
-      if(plant.assigned_name === "fern"){
+      if(plant.common_name === "fern"){
         console.log("Got a fern!")
+
+        rendered_plants.push(
+          <div class="bottom_stats_data_secs"><Leafy /></div>
+        )
+      }
+      else if(plant.common_name === "succulent"){
+        console.log("Not a fern. don't care bout you")
 
         rendered_plants.push(
           <div class="bottom_stats_data_secs"><Succulent /></div>
         )
-      }
-      else {
-        console.log("Not a fern. don't care bout you")
       }
     }
 

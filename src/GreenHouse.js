@@ -21,6 +21,10 @@ class GreenHouse extends React.Component {
   }
 
   componentDidMount = () => {
+    this.getPlants()
+  }
+
+  getPlants = () => {
     console.log("getting ze plants")
     fetch('http://localhost:3001/greenhouse/plants/' + this.state.user_email, {
       method: 'GET',
@@ -29,7 +33,6 @@ class GreenHouse extends React.Component {
       },
     })
     .then(response => {
-
       if (response.status === 200) {
         console.log('le plants have been found!')
 
@@ -39,17 +42,51 @@ class GreenHouse extends React.Component {
         }).catch(err => {
           console.log("error parsing response :'(" + err)
         })
-
+      }else {
+        console.log("uh oh... something went wrong: " + response)
       }
     }).catch(err => {
       console.log('error saving message' + err)
     })
-
-}
+  }
 
   addPlant = () => {
     console.log("adding a new plant!")
-    this.setState({show:false})
+    fetch('http://localhost:3001/greenhouse/plants/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_email: this.state.user_email,
+        common_name: "fern",
+        scientific_name: "fernulicious fernucosis",
+        assigned_name: "my buddy the fern",
+        plant_type: "leafy",
+        description: "My favorite fern in the whole wide world",
+        watering_frequency: "once/week",
+        watering_amount: "~ 1.5 teapots"
+      })
+    })
+    .then(response => {
+
+      if (response.status === 201) {
+        console.log('your plant has been added to our sacred list')
+
+        response.json().then(response => {
+          console.log("we got dem plantz")
+          console.log(response.message)
+          this.setState({show:false})
+          this.getPlants()
+        }).catch(err => {
+          console.log("error parsing response :'(" + err)
+        })
+      }else {
+        console.log("uh oh... something went wrong: " + response)
+      }
+    }).catch(err => {
+      console.log('error saving message' + err)
+    })
   }
 
   render() {
@@ -80,7 +117,7 @@ class GreenHouse extends React.Component {
           </Modal.Footer>
         </Modal>
 
-        <Shelf dataFromParent = {this.state.plants} />
+        <Shelf plants = {this.state.plants} />
 
       </div>
     )
