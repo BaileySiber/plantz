@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/lab": "^4.0.0-alpha.53",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -22,7 +23,8 @@
     "react-google-button": "^0.7.1",
     "react-google-login": "^5.1.14",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "react-search-autocomplete": "^1.0.6"
   },
   "scripts": {
     "start": "concurrently -k 'node server.js' 'react-scripts start'",

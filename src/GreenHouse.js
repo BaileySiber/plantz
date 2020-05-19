@@ -1,5 +1,6 @@
 import React from 'react'
-import { Modal, Button } from 'react-bootstrap'
+import { Modal, Button, Form } from 'react-bootstrap'
+import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import './GreenHouse.css';
 import Shelf from './Shelf.js';
 
@@ -8,8 +9,34 @@ class GreenHouse extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      user_email: this.props.location.state.user_email
+      user_email: this.props.location.state.user_email,
+      common_name: '',
+      scientific_name: '',
+      assigned_name: '',
+      plant_type: '',
+      description: '',
+      watering_amount: '',
+      watering_frequency:'',
+      items: [
+        {
+          id: 0,
+          name: "Fern",
+        }]
     }
+  }
+
+
+
+  onCommonNameChange = (event) => {
+    this.setState({
+      common_name: event.target.value
+    })
+  }
+
+  onAssignedNameChange = (event) => {
+    this.setState({
+      assigned_name: event.target.value
+    })
   }
 
   showModal = () => {
@@ -22,6 +49,22 @@ class GreenHouse extends React.Component {
 
   componentDidMount = () => {
     this.getPlants()
+  }
+
+  handleOnSearch = (string, cached) => {
+    // onSearch returns the string searched and if
+    // the values are cached. If the values are cached
+    // "cached" contains the cached values, if not, returns false
+    console.log(string, cached);
+  }
+
+  handleOnSelect = item => {
+    // the item selected
+    console.log(item);
+  }
+
+  handleOnFocus = () => {
+    console.log("Focused");
   }
 
   getPlants = () => {
@@ -51,6 +94,12 @@ class GreenHouse extends React.Component {
   }
 
   addPlant = () => {
+
+    if(this.state.common_name == 0 || this.state.assigned_name == 0){
+      alert('Please fill in both sections!')
+      return
+    }
+
     console.log("adding a new plant!")
     fetch('http://localhost:3001/greenhouse/plants/', {
       method: 'POST',
@@ -59,9 +108,9 @@ class GreenHouse extends React.Component {
       },
       body: JSON.stringify({
         user_email: this.state.user_email,
-        common_name: "fern",
+        common_name: this.state.common_name,
         scientific_name: "fernulicious fernucosis",
-        assigned_name: "my buddy the fern",
+        assigned_name: this.state.assigned_name,
         plant_type: "leafy",
         description: "My favorite fern in the whole wide world",
         watering_frequency: "once/week",
@@ -103,10 +152,31 @@ class GreenHouse extends React.Component {
         <Modal show={this.state.show} onHide={this.hideModal}>
           <Modal.Header closeButton>
             <Modal.Title>
-              Add Plant
+              Add a new plant to your collection!
             </Modal.Title>
           </Modal.Header>
-          <Modal.Body>Add a new plant to your collection!</Modal.Body>
+          <Modal.Body>
+            <Form>
+              <Form.Group controlId="formCommonName">
+                <Form.Label>Common Plant Name</Form.Label>
+                <ReactSearchAutocomplete
+                   items={this.state.items}
+                   onSearch={this.handleOnSearch}
+                   onSelect={this.handleOnSelect}
+                   onFocus={this.handleOnFocus}
+                   placeholder="Start typing..."
+                   autoFocus
+                 />
+              </Form.Group>
+              <Form.Group controlId="formAssignedName">
+                <Form.Label>Your Plant's Name</Form.Label>
+                <Form.Control type="input" placeholder="Ex: Lil Donk" />
+                <Form.Text className="text-muted">
+                  Naming your plant just adds to the fun :)
+                </Form.Text>
+              </Form.Group>
+            </Form>
+          </Modal.Body>
           <Modal.Footer>
             <Button className="secondary" onClick={this.hideModal}>
               Close
