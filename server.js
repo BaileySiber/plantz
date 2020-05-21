@@ -22,15 +22,26 @@ const User = mongoose.model('User', {
 //Creation of object connectino for MongoDB Plant collecction
 const Plant = mongoose.model('Plant', {
   user_email: String,
-  common_name: String,
-  scientific_name: String,
   assigned_name: String,
+  plant_data: {
+    name: String,
+    scientific_name: String,
+    plant_type: String,
+    description: String,
+    watering_frequency: String,
+    watering_amount: String
+  }
+})
+
+//Creation of object connectino for MongoDB Plant collecction
+const plantData = mongoose.model('plantData', {
+  name: String,
+  scientific_name: String,
   plant_type: String,
   description: String,
   watering_frequency: String,
   watering_amount: String
 })
-
 
 // Server method to handle user login
 app.post('/login/user', function (req, res) {
@@ -60,7 +71,7 @@ app.post('/login/user', function (req, res) {
 
 });
 
-app.post('/greenhouse/plants', function(req, res) {
+app.post('/greenhouse/plants/', function(req, res) {
   console.log('in add new plant')
 
   new Plant(req.body).save().then((result) => {
@@ -107,6 +118,19 @@ app.delete('/greenhouse/plants', function(req, res){
   })
 
 });
+
+app.get('/greenhouse/plants/', function(req, res) {
+  console.log("in get plant list func")
+
+  plantData.find().then(result => {
+    console.log("in plant list find" + result)
+    res.status(200).json(result)
+
+  }).catch((err => {
+    res.status(500).json({"error": err.message })
+  }))
+
+})
 
 app.get('/greenhouse/plants/:user_email', function(req, res){
   console.log('in get plant func')

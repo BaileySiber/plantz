@@ -20,7 +20,7 @@ class Shelf extends React.Component {
     for (const index in shelf_plants){
       const plant = shelf_plants[index]
 
-      console.log(plant)
+      console.log("looking at plant in shelf for loop" + plant)
 
       if(plant.common_name === "fern"){
         console.log("Got a fern!")
@@ -29,11 +29,11 @@ class Shelf extends React.Component {
           <div class="bottom_stats_data_secs"><Leafy /></div>
         )
       }
-      else if(plant.common_name === "succulent"){
-        console.log("Not a fern. don't care bout you")
+      else if(plant.plant_data.plant_type === "Succulent"){
+        console.log("succulent!" + plant.assigned_name)
 
         rendered_plants.push(
-          <div class="bottom_stats_data_secs"><Succulent /></div>
+          <div class="bottom_stats_data_secs"><Succulent name={plant.assigned_name}/></div>
         )
       }
     }

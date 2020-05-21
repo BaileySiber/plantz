@@ -10,27 +10,10 @@ class GreenHouse extends React.Component {
     super(props);
     this.state={
       user_email: this.props.location.state.user_email,
+      assigned_name:'',
       common_name: '',
-      scientific_name: '',
-      assigned_name: '',
-      plant_type: '',
-      description: '',
-      watering_amount: '',
-      watering_frequency:'',
-      items: [
-        {
-          id: 0,
-          name: "Fern",
-        }]
+      plant_list:[]
     }
-  }
-
-
-
-  onCommonNameChange = (event) => {
-    this.setState({
-      common_name: event.target.value
-    })
   }
 
   onAssignedNameChange = (event) => {
@@ -49,6 +32,7 @@ class GreenHouse extends React.Component {
 
   componentDidMount = () => {
     this.getPlants()
+    this.getPlantList()
   }
 
   handleOnSearch = (string, cached) => {
@@ -60,11 +44,33 @@ class GreenHouse extends React.Component {
 
   handleOnSelect = item => {
     // the item selected
-    console.log(item);
+    console.log("plant was selected!" + item.name);
+    this.setState({common_name: item.name})
   }
 
   handleOnFocus = () => {
     console.log("Focused");
+  }
+
+  getPlantList = () => {
+    console.log("getting plant list")
+    fetch('http://localhost:3001/greenhouse/plants/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(response => {
+      if(response.status === 200){
+        console.log('plant data list obtained!')
+        response.json().then(response => {
+          console.log('have the plant data')
+          console.log(response[0])
+          this.setState({plant_list: response})
+        })
+      }
+    })
+
   }
 
   getPlants = () => {
@@ -95,47 +101,61 @@ class GreenHouse extends React.Component {
 
   addPlant = () => {
 
-    if(this.state.common_name == 0 || this.state.assigned_name == 0){
-      alert('Please fill in both sections!')
+    console.log('in add plant')
+
+    if(this.state.common_name == 0){
+      alert('Please fill in name!')
       return
     }
 
-    console.log("adding a new plant!")
-    fetch('http://localhost:3001/greenhouse/plants/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        user_email: this.state.user_email,
-        common_name: this.state.common_name,
-        scientific_name: "fernulicious fernucosis",
-        assigned_name: this.state.assigned_name,
-        plant_type: "leafy",
-        description: "My favorite fern in the whole wide world",
-        watering_frequency: "once/week",
-        watering_amount: "~ 1.5 teapots"
-      })
-    })
-    .then(response => {
+    if(this.state.assigned_name == 0){
+      alert('Please fill in assigned name')
+      return
+    }
 
-      if (response.status === 201) {
-        console.log('your plant has been added to our sacred list')
+    const plantList = this.state.plant_list
+    const plantAdd = []
 
-        response.json().then(response => {
-          console.log("we got dem plantz")
-          console.log(response.message)
-          this.setState({show:false})
-          this.getPlants()
-        }).catch(err => {
-          console.log("error parsing response :'(" + err)
+    for (const index in plantList){
+      console.log('inside of plant list loop')
+      const plant = plantList[index]
+      console.log(plant)
+      if(plant.name === this.state.common_name){
+        plantAdd.push(plant)
+
+        console.log("adding a new plant!")
+        fetch('http://localhost:3001/greenhouse/plants/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_email: this.state.user_email,
+            assigned_name: this.state.assigned_name,
+            plant_data: plant
+          })
         })
-      }else {
-        console.log("uh oh... something went wrong: " + response)
+        .then(response => {
+
+          if (response.status === 201) {
+            console.log('your plant has been added to our sacred list')
+
+            response.json().then(response => {
+              console.log("we got dem plantz")
+              console.log(response.message)
+              this.setState({show:false})
+              this.getPlants()
+            }).catch(err => {
+              console.log("error parsing response :'(" + err)
+            })
+          }else {
+            console.log("uh oh... something went wrong: " + response)
+          }
+        }).catch(err => {
+          console.log('error saving message' + err)
+        })
       }
-    }).catch(err => {
-      console.log('error saving message' + err)
-    })
+    }
   }
 
   render() {
@@ -160,17 +180,17 @@ class GreenHouse extends React.Component {
               <Form.Group controlId="formCommonName">
                 <Form.Label>Common Plant Name</Form.Label>
                 <ReactSearchAutocomplete
-                   items={this.state.items}
-                   onSearch={this.handleOnSearch}
-                   onSelect={this.handleOnSelect}
-                   onFocus={this.handleOnFocus}
-                   placeholder="Start typing..."
-                   autoFocus
-                 />
+                  items={this.state.plant_list}
+                  onSearch={this.handleOnSearch}
+                  onSelect={this.handleOnSelect}
+                  onFocus={this.handleOnFocus}
+                  placeholder="Start typing..."
+                  autoFocus
+                />
               </Form.Group>
               <Form.Group controlId="formAssignedName">
                 <Form.Label>Your Plant's Name</Form.Label>
-                <Form.Control type="input" placeholder="Ex: Lil Donk" />
+                <Form.Control type="input" onChange={this.onAssignedNameChange} placeholder="Ex: Lil Donk" />
                 <Form.Text className="text-muted">
                   Naming your plant just adds to the fun :)
                 </Form.Text>
