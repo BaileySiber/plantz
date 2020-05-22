@@ -41,25 +41,13 @@ class Succulent extends React.Component {
               {this.props.plant.assigned_name}
             </Modal.Title>
           </Modal.Header>
-          <Modal.Body>
-            <Form>
-              <Form.Group controlId="formCommonName">
-                <Form.Label>Common Name: {this.props.plant.plant_data.name}</Form.Label>
-              </Form.Group>
-              <Form.Group controlId="formSciName">
-                <Form.Label>Scientific Name: {this.props.plant.plant_data.scientific_name}</Form.Label>
-              </Form.Group>
-              <Form.Group controlId="formDesc">
-                <Form.Label>Description: {this.props.plant.plant_data.description}</Form.Label>
-              </Form.Group>
-              <Form.Group controlId="formWaterFreq">
-                <Form.Label>Watering Frequency: {this.props.plant.plant_data.watering_frequency}</Form.Label>
-              </Form.Group>
-              <Form.Group controlId="formWaterAmt">
-                <Form.Label>Watering Amount: {this.props.plant.plant_data.watering_amount}</Form.Label>
-              </Form.Group>
-            </Form>
-          </Modal.Body>
+          <Modal.Body class="modal-b">
+            <h6 class="underline">Common Name:</h6> <p>{this.props.plant.plant_data.name}</p>
+            <h6 class="underline">Scientific Name:</h6> <p>{this.props.plant.plant_data.scientific_name}</p>
+            <h6 class="underline">Description:</h6> <p>{this.props.plant.plant_data.description}</p>
+            <h6 class="underline">Watering Frequency:</h6> <p>{this.props.plant.plant_data.watering_frequency}</p>
+            <h6 class="underline">Watering Amount:</h6> <p>{this.props.plant.plant_data.watering_amount}</p>
+        </Modal.Body>
           <Modal.Footer>
             <Button className="secondary" onClick={this.hideModal}>
               Close
