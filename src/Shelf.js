@@ -9,7 +9,7 @@ class Shelf extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      show: false,
+      show: false
     }
   }
 
@@ -33,7 +33,7 @@ class Shelf extends React.Component {
         console.log("succulent!" + plant.assigned_name)
 
         rendered_plants.push(
-          <div class="bottom_stats_data_secs"><Succulent name={plant.assigned_name}/></div>
+          <div class="bottom_stats_data_secs"><Succulent plant={plant}/></div>
         )
       }
     }
