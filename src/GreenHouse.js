@@ -171,14 +171,14 @@ class GreenHouse extends React.Component {
 
         <Modal show={this.state.show} onHide={this.hideModal}>
           <Modal.Header closeButton>
-            <Modal.Title>
+            <Modal.Title className="modal-f">
               Add a new plant to your collection!
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>
-              <Form.Group controlId="formCommonName">
-                <Form.Label>Common Plant Name</Form.Label>
+              <Form.Group>
+                <Form.Label className="modal-f">Common Plant Name</Form.Label>
                 <ReactSearchAutocomplete
                   items={this.state.plant_list}
                   onSearch={this.handleOnSearch}
@@ -188,8 +188,8 @@ class GreenHouse extends React.Component {
                   autoFocus
                 />
               </Form.Group>
-              <Form.Group controlId="formAssignedName">
-                <Form.Label>Your Plant's Name</Form.Label>
+              <Form.Group>
+                <Form.Label className="modal-f">Your Plant's Name</Form.Label>
                 <Form.Control type="input" onChange={this.onAssignedNameChange} placeholder="Ex: Lil Donk" />
                 <Form.Text className="text-muted">
                   Naming your plant just adds to the fun :)

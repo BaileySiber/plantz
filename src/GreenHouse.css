@@ -9,6 +9,10 @@
   color: #81b29a;
 }
 
+.modal-f {
+  font-family: 'Eczar', serif;
+}
+
 button {
   padding: .4rem 1.2rem;
   margin-right: 5%;

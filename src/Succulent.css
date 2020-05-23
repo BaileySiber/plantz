@@ -2,13 +2,39 @@ Modal {
   width: 80%;
 }
 
+.raindrop {
+  height: 25px;
+  width: 40px;
+}
+
 .modal-b {
   padding: 4% 4% 0% 4%;
 }
 
+.modal-t {
+  font-family: 'Eczar', serif;
+  font-size: 25px;
+  padding-left: 1%;
+}
+
+.water {
+  background-color: #81b2b2;
+  border-color: #81b2b2;
+}
+
+.water:hover {
+  background-color: #a6c8c8;
+  border-color: #81b2b2;
+}
+
 .underline {
+  font-family: 'Eczar', serif;
   border-bottom: 2px solid #B3D0C2;
   margin:0;
+}
+
+.val {
+  font-size: 13px;
 }
 
 .base {
@@ -21,6 +47,7 @@ Modal {
   position: absolute;
   top: 70px;
   width: 100%;
+  font-family: 'Eczar', serif, lighter;
 }
 
 .flowerpot {
