@@ -3,6 +3,7 @@ import { Modal, Button } from 'react-bootstrap'
 import './Shelf.css';
 import Succulent from './Succulent.js'
 import Leafy from './Leafy.js'
+import Flower from './Flower.js'
 
 class Shelf extends React.Component {
 
@@ -22,11 +23,11 @@ class Shelf extends React.Component {
 
       console.log("looking at plant in shelf for loop" + plant)
 
-      if(plant.common_name === "fern"){
+      if(plant.plant_data.plant_type === "Flower"){
         console.log("Got a fern!")
 
         rendered_plants.push(
-          <div class="bottom_stats_data_secs"><Leafy /></div>
+          <div class="bottom_stats_data_secs"><Flower plant={plant}/></div>
         )
       }
       else if(plant.plant_data.plant_type === "Succulent"){
