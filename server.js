@@ -4,6 +4,7 @@ const path = require('path');
 const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
+var nodemailer = require('nodemailer');
 
 
 // Setup Ssrver packages/configuration
@@ -12,6 +13,13 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json())
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
 
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
 // Creation of object connection for MongoDB User collection
 const User = mongoose.model('User', {
@@ -160,6 +168,45 @@ app.get('/greenhouse/plants/:user_email', function(req, res){
   })
 
 });
+
+app.post('/greenhouse/plants/reminder/:user_email', function(req, res){
+  console.log('in reminder post method')
+
+  if(!req.params.user_email){
+    console.log("no email address provided")
+    res.status(400).json({"message":"bad request - no user email"})
+  }
+
+  User.findOne({ email: req.params.user_email }).then(result => {
+    console.log("in find user")
+    if(!result){
+      res.status(404).json({"message":"not found - user does not exist"})
+    }
+
+    var mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: req.params.user_email,
+      subject: 'Reminder - It is Time to water your plants!',
+      text: 'Water dem plants!'
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+        res.status(500).json({"error": err.message})
+      } else {
+        console.log('Email sent: ' + info.response);
+        res.status(200).json({ "message": "yay email was sent!" })
+      }
+    });
+
+  }).catch((err) => {
+    console.log("failed to find user")
+    res.status(500).json({"error": err.message})
+  })
+
+})
+
 
 app.listen(process.env.PORT || 3001, function () {
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);

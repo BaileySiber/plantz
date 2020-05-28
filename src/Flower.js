@@ -30,6 +30,10 @@ class Succulent extends React.Component {
     this.setState({show2:false})
   }
 
+  setReminder = () => {
+    console.log("in set reminder")
+  }
+
   render() {
 
     console.log('name is' + this.props.plant.assigned_name)
