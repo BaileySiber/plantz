@@ -8,7 +8,8 @@ class Succulent extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      show: false
+      show: false,
+      show2: false
     }
   }
 
@@ -18,6 +19,16 @@ class Succulent extends React.Component {
 
   hideModal = () => {
     this.setState({show:false})
+  }
+
+
+  hideModalShowSecond = () => {
+    this.setState({show:false})
+    this.setState({show2:true})
+  }
+
+  hideSecondModal = () => {
+    this.setState({show2:false})
   }
 
   render() {
@@ -48,20 +59,40 @@ class Succulent extends React.Component {
             <h6 class="underline">Description:</h6> <p class="val">{this.props.plant.plant_data.description}</p>
             <h6 class="underline">Watering Frequency:</h6> <p class="val">{this.props.plant.plant_data.watering_frequency}</p>
             <h6 class="underline">Watering Amount:</h6> <p class="val">{this.props.plant.plant_data.watering_amount}</p>
-        </Modal.Body>
+          </Modal.Body>
           <Modal.Footer>
-            <Button className="water" onClick={this.addPlant}>
-            <img className="raindrop" src={raindrop} />
+            <Button className="water" onClick={this.hideModalShowSecond}>
+              <img className="raindrop" src={raindrop} />
             </Button>
             <Button className="secondary" onClick={this.hideModal}>
               Close
             </Button>
           </Modal.Footer>
         </Modal>
+
+        <Modal show={this.state.show2} onHide={this.hideSecondModal}>
+          <Modal.Header closeButton>
+            <Modal.Title class="modal-t">
+              {this.props.plant.assigned_name}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body class="modal-b">
+            <p>so you want a watering reminder huh?</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button className="water" onClick={this.setReminder}>
+              <img className="raindrop" src={raindrop} />
+            </Button>
+            <Button className="secondary" onClick={this.hideSecondModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
       </div>
 
     )
   }
 }
 
-  export default Succulent
+export default Succulent
