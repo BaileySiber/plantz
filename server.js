@@ -13,6 +13,8 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json())
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
 
+
+// Creation of an object to send emails
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -21,13 +23,15 @@ var transporter = nodemailer.createTransport({
   }
 });
 
+
 // Creation of object connection for MongoDB User collection
 const User = mongoose.model('User', {
   name: String,
   email: String,
 })
 
-//Creation of object connectino for MongoDB Plant collecction
+
+//Creation of object connection for MongoDB Plant collecction
 const Plant = mongoose.model('Plant', {
   user_email: String,
   assigned_name: String,
@@ -36,12 +40,14 @@ const Plant = mongoose.model('Plant', {
     scientific_name: String,
     plant_type: String,
     description: String,
-    watering_frequency: String,
+    watering_frequency: Number,
     watering_amount: String
-  }
+  },
+  last_watered: Date
 })
 
-//Creation of object connectino for MongoDB Plant collecction
+
+//Creation of object connection for MongoDB PlantData collecction
 const plantData = mongoose.model('plantData', {
   name: String,
   scientific_name: String,
@@ -50,6 +56,7 @@ const plantData = mongoose.model('plantData', {
   watering_frequency: String,
   watering_amount: String
 })
+
 
 // Server method to handle user login
 app.post('/login/user', function (req, res) {
@@ -79,6 +86,8 @@ app.post('/login/user', function (req, res) {
 
 });
 
+
+// Server route to handle adding a new plant to our user plants database
 app.post('/greenhouse/plants/', function(req, res) {
   console.log('in add new plant')
 
@@ -96,6 +105,8 @@ app.post('/greenhouse/plants/', function(req, res) {
 
 });
 
+
+// Server route to delete plant from database
 app.delete('/greenhouse/plants', function(req, res){
   console.log("in delete plant func")
 
@@ -127,6 +138,8 @@ app.delete('/greenhouse/plants', function(req, res){
 
 });
 
+
+// Server route to get list of all plant data objects in database
 app.get('/greenhouse/plants/', function(req, res) {
   console.log("in get plant list func")
 
@@ -140,6 +153,8 @@ app.get('/greenhouse/plants/', function(req, res) {
 
 })
 
+
+// Server route to get list of all user plants belonging to the user
 app.get('/greenhouse/plants/:user_email', function(req, res){
   console.log('in get plant func')
 
@@ -169,40 +184,109 @@ app.get('/greenhouse/plants/:user_email', function(req, res){
 
 });
 
-app.post('/greenhouse/plants/reminder/:user_email', function(req, res){
-  console.log('in reminder post method')
+// // Psuedo code for emailing notification service
+// 1. Query user collection for all users
+// 2. For each user:
+// a. Query user plant collection for all plants for given user
+// b. For each plant:
+// i. Check if last watered day + watering Frequency <= today
+// Yes -> add to list of plants that need watering, update last watered day for given plant to today
+// No  -> do nothing
+// c. Create content for body of email using array of thirsty plants
+// d. Send email to user (optional: on success, update last watered day here instead of 192)
 
-  if(!req.params.user_email){
-    console.log("no email address provided")
-    res.status(400).json({"message":"bad request - no user email"})
+
+// Helper function to send user email if user has plants that need watering
+var sendWateringReminder = async (user) => {
+  console.log('sending watering reminder for user')
+
+  userPlants = await getUserPlants(user)
+
+  console.log("user plants are: ")
+  console.log(userPlants)
+
+  thirstyPlants = []
+  for (i = 0; i < userPlants.length; i++) {
+    // TODO: add check for reminder boolean
+
+    lastWatered = userPlants[i].last_watered
+    water_freq  = userPlants[i].plant_data.watering_frequency
+
+    var today = new Date().getDate();
+    console.log("Today's Date is: " + today)
+
+    var nextWater = lastWatered
+    nextWater.setDate(nextWater.getDate() + water_freq);
+    console.log("Next Watering Date is: " + nextWater.getDate())
+
+    if ( nextWater <= today ){
+
+      thirstyPlants.push(userPlants[i])
+      userPlants[i].last_watered = today
+      Plant.updateOne({ _id: userPlants[i]._id }, userPlants[i])
+
+    } else {
+      console.log("you're a buttface")
+    }
   }
 
-  User.findOne({ email: req.params.user_email }).then(result => {
-    console.log("in find user")
-    if(!result){
-      res.status(404).json({"message":"not found - user does not exist"})
+  var emailText = 'These plants are thiiiiiiiirsty\n'
+  for (i = 0; i < thirstyPlants.length; i++) {
+    emailText += thirstyPlants[i].assigned_name + '\n'
+  }
+
+  var mailOptions = {
+    from:    process.env.EMAIL_USER,
+    to:      user.email,
+    subject: 'Reminder - It is Time to water your plants!',
+    text:    emailText
+  };
+
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+      return false;
+    } else {
+      console.log('Email sent: ' + info.response);
+      return true;
     }
+  });
 
-    var mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: req.params.user_email,
-      subject: 'Reminder - It is Time to water your plants!',
-      text: 'Water dem plants!'
-    };
+}
 
-    transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        console.log(error);
-        res.status(500).json({"error": err.message})
-      } else {
-        console.log('Email sent: ' + info.response);
-        res.status(200).json({ "message": "yay email was sent!" })
-      }
-    });
+// Helper function to get all plants for given user
+var getUserPlants = async (user) => {
+
+  console.log("Finding all plants in helper function")
+
+  Plant.find({ user_email: user.email }).then((result) => {
+    console.log("finded all dem planties" + result)
+    return result
 
   }).catch((err) => {
-    console.log("failed to find user")
-    res.status(500).json({"error": err.message})
+    console.log("error finding user plants: ", err)
+    return []
+  })
+
+}
+
+// Server route to handle sending plant watering reminders
+app.post('/greenhouse/plants/reminders', async function(req, res){
+  console.log('in reminder post method')
+
+  User.find().then((result) => {
+
+    console.log("found all the peoples!" + result)
+
+    sendWateringReminder(result[0])
+    // for (i = 0; i < result.length; i++){
+    //   sendWateringReminder(result[i])
+    // }
+    res.status(200).send()
+
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).json({"message":"failed to find users :("})
   })
 
 })
