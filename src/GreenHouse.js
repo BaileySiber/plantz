@@ -9,12 +9,13 @@ class GreenHouse extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      user_email: this.props.location.state.user_email,
-      assigned_name:'',
-      common_name: '',
-      plant_list:[]
+      user_email:    this.props.location.state.user_email,
+      assigned_name: '',
+      common_name:   '',
+      plant_list:    []
     }
   }
+
 
   onAssignedNameChange = (event) => {
     this.setState({
@@ -22,25 +23,22 @@ class GreenHouse extends React.Component {
     })
   }
 
+
   showModal = () => {
     this.setState({show: true})
   }
 
+
   hideModal = () => {
     this.setState({show:false})
   }
+
 
   componentDidMount = () => {
     this.getPlants()
     this.getPlantList()
   }
 
-  handleOnSearch = (string, cached) => {
-    // onSearch returns the string searched and if
-    // the values are cached. If the values are cached
-    // "cached" contains the cached values, if not, returns false
-    console.log(string, cached);
-  }
 
   handleOnSelect = item => {
     // the item selected
@@ -48,12 +46,11 @@ class GreenHouse extends React.Component {
     this.setState({common_name: item.name})
   }
 
-  handleOnFocus = () => {
-    console.log("Focused");
-  }
 
   getPlantList = () => {
+
     console.log("getting plant list")
+
     fetch('http://localhost:3001/greenhouse/plants/', {
       method: 'GET',
       headers: {
@@ -61,20 +58,27 @@ class GreenHouse extends React.Component {
       },
     })
     .then(response => {
+
       if(response.status === 200){
+
         console.log('plant data list obtained!')
+
         response.json().then(response => {
           console.log('have the plant data')
           console.log(response[0])
           this.setState({plant_list: response})
         })
+      }else {
+        console.log("something unexpected happened: ", response.status)
       }
-    })
+    }).catch(err => console.log("an error occurred while getting plant list: ", err))
 
   }
 
+
   getPlants = () => {
     console.log("getting ze plants")
+
     fetch('http://localhost:3001/greenhouse/plants/' + this.state.user_email, {
       method: 'GET',
       headers: {
@@ -82,21 +86,19 @@ class GreenHouse extends React.Component {
       },
     })
     .then(response => {
+
       if (response.status === 200) {
         console.log('le plants have been found!')
 
         response.json().then(response => {
           console.log("we got dem plantz")
           this.setState({plants: response})
-        }).catch(err => {
-          console.log("error parsing response :'(" + err)
-        })
+        }).catch(err => console.log("error parsing response :'(" + err))
+
       }else {
         console.log("uh oh... something went wrong: " + response)
       }
-    }).catch(err => {
-      console.log('error saving message' + err)
-    })
+    }).catch(err => console.log('error saving message' + err))
   }
 
   addPlant = () => {
@@ -141,19 +143,18 @@ class GreenHouse extends React.Component {
             console.log('your plant has been added to our sacred list')
 
             response.json().then(response => {
+
               console.log("we got dem plantz")
               console.log(response.message)
               this.setState({show:false})
               this.getPlants()
-            }).catch(err => {
-              console.log("error parsing response :'(" + err)
-            })
+
+            }).catch(err => console.log("error parsing response :'(" + err))
+
           }else {
             console.log("uh oh... something went wrong: " + response)
           }
-        }).catch(err => {
-          console.log('error saving message' + err)
-        })
+        }).catch(err => console.log('error saving message' + err))
       }
     }
   }
@@ -181,9 +182,7 @@ class GreenHouse extends React.Component {
                 <Form.Label className="modal-f">Common Plant Name</Form.Label>
                 <ReactSearchAutocomplete
                   items={this.state.plant_list}
-                  onSearch={this.handleOnSearch}
                   onSelect={this.handleOnSelect}
-                  onFocus={this.handleOnFocus}
                   placeholder="Start typing..."
                   autoFocus
                 />

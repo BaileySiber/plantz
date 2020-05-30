@@ -15,6 +15,7 @@ class Shelf extends React.Component {
   }
 
   render() {
+
     const shelf_plants = this.props.plants
     const rendered_plants = []
 
@@ -29,13 +30,14 @@ class Shelf extends React.Component {
         rendered_plants.push(
           <div class="bottom_stats_data_secs"><Flower plant={plant}/></div>
         )
-      }
-      else if(plant.plant_data.plant_type === "Succulent"){
+      } else if(plant.plant_data.plant_type === "Succulent"){
         console.log("succulent!" + plant.assigned_name)
 
         rendered_plants.push(
           <div class="bottom_stats_data_secs"><Succulent plant={plant}/></div>
         )
+      } else {
+        console.log("unrecognized plant type: ", this.plant_data.plant_type)
       }
     }
 

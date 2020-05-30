@@ -16,9 +16,11 @@ class GoogleSignIn extends React.Component {
   }
 
   loginSuccess = (response) => {
+
     console.log('in login success' + response.profileObj.name);
-    // fetch('https://thegreenhouse.herokuapp.com/login/user', {
+
     this.setState({name:response.profileObj.name, email:response.profileObj.email})
+
     fetch('http://localhost:3001/login/user', {
       method: 'POST',
       headers: {
@@ -30,16 +32,22 @@ class GoogleSignIn extends React.Component {
       })
     })
     .then(resp => {
+
       if(resp.status === 201){
+        // new user has logged in and been successfully created
         console.log('this was saved!')
         this.setState({isLoggedIn:true})
       }
       else if(resp.status === 200){
+        // existing user has successfully logged in
         console.log('dey exist silly')
         this.setState({isLoggedIn:true})
       }
-    })
-    .catch(err => console.log('error saving user' + err))
+      else {
+        console.log("something unexpected happend, status code: ", resp.status)
+      }
+
+    }).catch(err => console.log('error saving user' + err))
   }
 
   loginFailure = () => {
@@ -55,8 +63,8 @@ class GoogleSignIn extends React.Component {
 
           ?
 
-          <Redirect
-            to={{ pathname: '/greenhouse', state: { user_email: this.state.email } }} />
+          <Redirect to={{ pathname: '/greenhouse',
+                          state: { user_email: this.state.email } }} />
 
           :
 
