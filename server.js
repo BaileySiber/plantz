@@ -57,6 +57,12 @@ const plantData = mongoose.model('plantData', {
   watering_amount: String
 })
 
+//Add new function to Date in order to handle adding dates together
+Date.prototype.addDays = function(days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+}
 
 // Server method to handle user login
 app.post('/login/user', function (req, res) {
@@ -197,27 +203,24 @@ app.get('/greenhouse/plants/:user_email', function(req, res){
 
 
 // Helper function to send user email if user has plants that need watering
-var sendWateringReminder = async (user) => {
+var sendWateringReminder = (user, userPlants) => {
   console.log('sending watering reminder for user')
-
-  userPlants = await getUserPlants(user)
-
-  console.log("user plants are: ")
-  console.log(userPlants)
 
   thirstyPlants = []
   for (i = 0; i < userPlants.length; i++) {
     // TODO: add check for reminder boolean
 
     lastWatered = userPlants[i].last_watered
+    console.log('last watered is ' + lastWatered)
     water_freq  = userPlants[i].plant_data.watering_frequency
-
-    var today = new Date().getDate();
+    console.log('water freq is ' + water_freq)
+    var today = new Date()
+    console.log(today)
     console.log("Today's Date is: " + today)
 
     var nextWater = lastWatered
-    nextWater.setDate(nextWater.getDate() + water_freq);
-    console.log("Next Watering Date is: " + nextWater.getDate())
+    nextWater.addDays(water_freq);
+    console.log("Next Watering Date is: " + nextWater)
 
     if ( nextWater <= today ){
 
@@ -255,17 +258,18 @@ var sendWateringReminder = async (user) => {
 }
 
 // Helper function to get all plants for given user
-var getUserPlants = async (user) => {
+var getUserPlants = (user, callback) => {
 
   console.log("Finding all plants in helper function")
 
   Plant.find({ user_email: user.email }).then((result) => {
     console.log("finded all dem planties" + result)
-    return result
+    callback(user, result)
 
   }).catch((err) => {
     console.log("error finding user plants: ", err)
-    return []
+    // TODO: handle this better
+    callback(user, result)
   })
 
 }
@@ -278,7 +282,8 @@ app.post('/greenhouse/plants/reminders', async function(req, res){
 
     console.log("found all the peoples!" + result)
 
-    sendWateringReminder(result[0])
+    getUserPlants(result[0], sendWateringReminder)
+    //
     // for (i = 0; i < result.length; i++){
     //   sendWateringReminder(result[i])
     // }
