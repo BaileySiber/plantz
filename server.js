@@ -58,11 +58,11 @@ const plantData = mongoose.model('plantData', {
 })
 
 //Add new function to Date in order to handle adding dates together
-Date.prototype.addDays = function(days) {
-    var date = new Date(this.valueOf());
-    date.setDate(date.getDate() + days);
-    return date;
-}
+// Date.prototype.addDays = function(days) {
+//     var date = new Date();
+//     date.setDate(date.getDate() + days);
+//     return date;
+// }
 
 // Server method to handle user login
 app.post('/login/user', function (req, res) {
@@ -211,49 +211,53 @@ var sendWateringReminder = (user, userPlants) => {
     // TODO: add check for reminder boolean
 
     lastWatered = userPlants[i].last_watered
-    console.log('last watered is ' + lastWatered)
     water_freq  = userPlants[i].plant_data.watering_frequency
-    console.log('water freq is ' + water_freq)
     var today = new Date()
-    console.log(today)
-    console.log("Today's Date is: " + today)
-
     var nextWater = lastWatered
-    nextWater.addDays(water_freq);
+    nextWater.setDate(nextWater.getDate() + water_freq);
+    // nextWater.addDays(water_freq);
     console.log("Next Watering Date is: " + nextWater)
 
     if ( nextWater <= today ){
 
       thirstyPlants.push(userPlants[i])
       userPlants[i].last_watered = today
-      Plant.updateOne({ _id: userPlants[i]._id }, userPlants[i])
+      console.log('todays last watered is ' +   userPlants[i].last_watered)
+      console.log('plant _id ' +   userPlants[i]._id)
+      Plant.update({ _id: userPlants[i]._id }, {
+        last_watered: today
 
-    } else {
+      })
+    }
+
+    else {
       console.log("you're a buttface")
     }
   }
 
-  var emailText = 'These plants are thiiiiiiiirsty\n'
-  for (i = 0; i < thirstyPlants.length; i++) {
-    emailText += thirstyPlants[i].assigned_name + '\n'
-  }
-
-  var mailOptions = {
-    from:    process.env.EMAIL_USER,
-    to:      user.email,
-    subject: 'Reminder - It is Time to water your plants!',
-    text:    emailText
-  };
-
-  transporter.sendMail(mailOptions, function(error, info){
-    if (error) {
-      console.log(error);
-      return false;
-    } else {
-      console.log('Email sent: ' + info.response);
-      return true;
+  if (thirstyPlants.length != 0){
+    var emailText = 'These plants are thiiiiiiiirsty\n'
+    for (i = 0; i < thirstyPlants.length; i++) {
+      emailText += thirstyPlants[i].assigned_name + '\n'
     }
-  });
+
+    var mailOptions = {
+      from:    process.env.EMAIL_USER,
+      to:      user.email,
+      subject: 'Reminder - It is Time to water your plants!',
+      text:    emailText
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+        return false;
+      } else {
+        console.log('Email sent: ' + info.response);
+        return true;
+      }
+    });
+  }
 
 }
 
