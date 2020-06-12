@@ -46,7 +46,6 @@ const Plant = mongoose.model('Plant', {
   last_watered: Date
 })
 
-
 //Creation of object connection for MongoDB PlantData collecction
 const plantData = mongoose.model('plantData', {
   name: String,
@@ -279,26 +278,29 @@ var getUserPlants = (user, callback) => {
 }
 
 // Server route to handle sending plant watering reminders
-app.post('/greenhouse/plants/reminders', async function(req, res){
-  console.log('in reminder post method')
+var sendReminder = () => {
+
+  console.log('in reminder func')
 
   User.find().then((result) => {
 
     console.log("found all the peoples!" + result)
 
-    getUserPlants(result[0], sendWateringReminder)
+  for (i = 0; i < result.length; i++) {
+    getUserPlants(result[i], sendWateringReminder)
+  }
     //
     // for (i = 0; i < result.length; i++){
     //   sendWateringReminder(result[i])
     // }
-    res.status(200).send()
-
   }).catch((err) => {
     console.log(err);
-    res.status(500).json({"message":"failed to find users :("})
   })
 
-})
+}
+
+//run sendWatering Reminder once a day every day to trigger emails
+setInterval(sendReminder, 43200000);
 
 
 app.listen(process.env.PORT || 3001, function () {
