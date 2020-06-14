@@ -47,6 +47,7 @@ const Plant = mongoose.model('Plant', {
   last_watered: Date
 })
 
+
 //Creation of object connection for MongoDB PlantData collecction
 const plantData = mongoose.model('plantData', {
   name: String,
@@ -174,6 +175,7 @@ app.get('/greenhouse/plants/:user_email', function(req, res){
       res.status(200).json(result)
 
     }).catch((err) => {
+      console.log("error finding dem little buddies ", err)
       res.status(500).json({"message":"failed to get the plants :("})
     })
 
@@ -184,11 +186,10 @@ app.get('/greenhouse/plants/:user_email', function(req, res){
 
 });
 
+
 // Server route to update reminder bool on a single plant
 app.post('/greenhouse/plants/reminder', function(req, res){
   console.log('in set reminder func')
-
-  console.log("reminder val in server is" + req.body.reminder)
 
   if(req.body._id == null || req.body.reminder == null){
     console.log("no plant id or reminder bool provided")
@@ -205,6 +206,7 @@ app.post('/greenhouse/plants/reminder', function(req, res){
     res.status(500).json({"error": err.message})
   })
 
+  res.status(500).json({"error": "something unexpected happened"})
 })
 
 // Helper function to send user email if user has plants that need watering
@@ -213,34 +215,37 @@ var sendWateringReminder = (user, userPlants) => {
 
   thirstyPlants = []
   for (i = 0; i < userPlants.length; i++) {
-    // TODO: add check for reminder boolean
+    currentPlant = userPlants[i]
+    console.log("Current plant is: ", currentPlant)
 
-    lastWatered = userPlants[i].last_watered
-    water_freq  = userPlants[i].plant_data.watering_frequency
-    var today = new Date()
-    var nextWater = lastWatered
-    nextWater.setDate(nextWater.getDate() + water_freq);
-    // nextWater.addDays(water_freq);
-    console.log("Next Watering Date is: " + nextWater)
+    if (currentPlant.reminder){
+      console.log("watering reminder is on")
+      lastWatered = currentPlant.last_watered
+      water_freq  = currentPlant.plant_data.watering_frequency
+      var today = new Date()
+      var nextWater = lastWatered
+      nextWater.setDate(nextWater.getDate() + water_freq)
+      console.log("Next Watering Date is: " + nextWater)
 
-    if ( nextWater <= today ){
+      if ( nextWater <= today ){
+        console.log("plant is thiiiiiiiirsty")
 
-      thirstyPlants.push(userPlants[i])
-      userPlants[i].last_watered = today
-      console.log('todays last watered is ' +   userPlants[i].last_watered)
-      console.log('plant _id ' +   userPlants[i]._id)
-      Plant.update({ _id: userPlants[i]._id }, {
-        last_watered: today
-      }).then((result) => {
-        console.log("updated the plant!" + result)
-      }).catch((err) => {
-        console.log("failed to update plant" + err)
-      })
-    }
+        currentPlant.last_watered = today
+        console.log('todays last watered is ' +   currentPlant.last_watered)
+        console.log('plant _id ' +   currentPlant._id)
 
-    else {
-      console.log("you're a buttface")
-    }
+        Plant.update({ _id: currentPlant._id }, {
+          last_watered: today
+        }).then((result) => {
+          console.log("updated the plant!" + result)
+          thirstyPlants.push(currentPlant)
+        }).catch((err) => {
+          console.log("failed to update plant" + err)
+        })
+
+      }else {console.log("you're a buttface")}
+
+    }else{console.log("watering reminder is off")}
   }
 
   if (thirstyPlants.length != 0){
