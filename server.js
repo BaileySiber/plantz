@@ -225,7 +225,10 @@ var sendWateringReminder = (user, userPlants) => {
       console.log('plant _id ' +   userPlants[i]._id)
       Plant.update({ _id: userPlants[i]._id }, {
         last_watered: today
-
+      }).then((result) => {
+        console.log("updated the plant!" + result)
+      }).catch((err) => {
+        console.log("failed to update plant" + err)
       })
     }
 
@@ -247,15 +250,15 @@ var sendWateringReminder = (user, userPlants) => {
       text:    emailText
     };
 
-    transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        console.log(error);
-        return false;
-      } else {
-        console.log('Email sent: ' + info.response);
-        return true;
-      }
-    });
+    // transporter.sendMail(mailOptions, function(error, info){
+    //   if (error) {
+    //     console.log(error);
+    //     return false;
+    //   } else {
+    //     console.log('Email sent: ' + info.response);
+    //     return true;
+    //   }
+    // });
   }
 
 }
@@ -300,7 +303,7 @@ var sendReminder = () => {
 }
 
 //run sendWatering Reminder once a day every day to trigger emails
-setInterval(sendReminder, 43200000);
+setInterval(sendReminder, 86400000);
 
 
 app.listen(process.env.PORT || 3001, function () {
