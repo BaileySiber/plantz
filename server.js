@@ -56,12 +56,6 @@ const plantData = mongoose.model('plantData', {
   watering_amount: String
 })
 
-//Add new function to Date in order to handle adding dates together
-// Date.prototype.addDays = function(days) {
-//     var date = new Date();
-//     date.setDate(date.getDate() + days);
-//     return date;
-// }
 
 // Server method to handle user login
 app.post('/login/user', function (req, res) {
@@ -189,17 +183,6 @@ app.get('/greenhouse/plants/:user_email', function(req, res){
 
 });
 
-// // Psuedo code for emailing notification service
-// 1. Query user collection for all users
-// 2. For each user:
-// a. Query user plant collection for all plants for given user
-// b. For each plant:
-// i. Check if last watered day + watering Frequency <= today
-// Yes -> add to list of plants that need watering, update last watered day for given plant to today
-// No  -> do nothing
-// c. Create content for body of email using array of thirsty plants
-// d. Send email to user (optional: on success, update last watered day here instead of 192)
-
 
 // Helper function to send user email if user has plants that need watering
 var sendWateringReminder = (user, userPlants) => {
@@ -250,15 +233,15 @@ var sendWateringReminder = (user, userPlants) => {
       text:    emailText
     };
 
-    // transporter.sendMail(mailOptions, function(error, info){
-    //   if (error) {
-    //     console.log(error);
-    //     return false;
-    //   } else {
-    //     console.log('Email sent: ' + info.response);
-    //     return true;
-    //   }
-    // });
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+        return false;
+      } else {
+        console.log('Email sent: ' + info.response);
+        return true;
+      }
+    });
   }
 
 }
@@ -289,13 +272,9 @@ var sendReminder = () => {
 
     console.log("found all the peoples!" + result)
 
-  for (i = 0; i < result.length; i++) {
-    getUserPlants(result[i], sendWateringReminder)
-  }
-    //
-    // for (i = 0; i < result.length; i++){
-    //   sendWateringReminder(result[i])
-    // }
+    for (i = 0; i < result.length; i++) {
+      getUserPlants(result[i], sendWateringReminder)
+    }
   }).catch((err) => {
     console.log(err);
   })
