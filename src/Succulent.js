@@ -9,7 +9,8 @@ class Succulent extends React.Component {
     super(props);
     this.state={
       show: false,
-      show2: false
+      show2: false,
+      reminder: false
     }
   }
 
@@ -29,6 +30,28 @@ class Succulent extends React.Component {
 
   hideSecondModal = () => {
     this.setState({show2:false})
+  }
+
+  setReminder = async () => {
+    await this.setState({reminder:true})
+
+      fetch('http://localhost:3001/greenhouse/plants/reminder', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          reminder: this.state.reminder,
+          _id: this.props.plant._id
+        })
+      })
+      .then((response) => {
+        console.log(response.status)
+        if (response.status === 200) {
+          this.setState({show2:false})
+        }
+      })
+      .catch(err => console.log("error parsing response :'(" + err))
   }
 
   render() {
@@ -57,7 +80,7 @@ class Succulent extends React.Component {
             <h6 class="underline">Common Name:</h6> <p class="val">{this.props.plant.plant_data.name}</p>
             <h6 class="underline">Scientific Name:</h6> <p class="val">{this.props.plant.plant_data.scientific_name}</p>
             <h6 class="underline">Description:</h6> <p class="val">{this.props.plant.plant_data.description}</p>
-            <h6 class="underline">Watering Frequency:</h6> <p class="val">{this.props.plant.plant_data.watering_frequency}</p>
+            <h6 class="underline">Watering Frequency (Days):</h6> <p class="val">{this.props.plant.plant_data.watering_frequency}</p>
             <h6 class="underline">Watering Amount:</h6> <p class="val">{this.props.plant.plant_data.watering_amount}</p>
           </Modal.Body>
           <Modal.Footer>

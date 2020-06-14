@@ -43,6 +43,7 @@ const Plant = mongoose.model('Plant', {
     watering_frequency: Number,
     watering_amount: String
   },
+  reminder: Boolean,
   last_watered: Date
 })
 
@@ -183,6 +184,28 @@ app.get('/greenhouse/plants/:user_email', function(req, res){
 
 });
 
+// Server route to update reminder bool on a single plant
+app.post('/greenhouse/plants/reminder', function(req, res){
+  console.log('in set reminder func')
+
+  console.log("reminder val in server is" + req.body.reminder)
+
+  if(req.body._id == null || req.body.reminder == null){
+    console.log("no plant id or reminder bool provided")
+    res.status(400).json({"message":"bad request - no plant id or reminder"})
+  }
+
+  Plant.update({ _id: req.body._id }, {
+    reminder: req.body.reminder
+  }).then((result) => {
+    console.log("updated the plant reminder!" + result)
+    res.status(200).json(result)
+  }).catch((err) => {
+    console.log("failed to update plant reminder" + err)
+    res.status(500).json({"error": err.message})
+  })
+
+})
 
 // Helper function to send user email if user has plants that need watering
 var sendWateringReminder = (user, userPlants) => {
