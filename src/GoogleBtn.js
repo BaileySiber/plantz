@@ -70,7 +70,7 @@ class GoogleSignIn extends React.Component {
 
           <header className="Login-header">
             <GoogleLogin
-              clientId="235351537587-pchproqf9sk54ti65i832ae988qo04uj.apps.googleusercontent.com"
+              clientId="250041201960-atfq9e4jrjb3745l87rqbq6gf3loa5in.apps.googleusercontent.com"
               buttonText="Login"
               onSuccess={this.loginSuccess}
               onFailure={this.loginFailure}
