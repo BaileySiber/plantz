@@ -13,7 +13,7 @@ class GreenHouse extends React.Component {
       assigned_name: '',
       common_name:   '',
       plant_list:    []
-    }
+        }
   }
 
 
@@ -46,12 +46,12 @@ class GreenHouse extends React.Component {
     this.setState({common_name: item.name})
   }
 
-
+// this is in order to pull the names of *all* plants so that way we can have them autopopulate in the dropdown
   getPlantList = () => {
 
     console.log("getting plant list")
 
-    fetch('http://localhost:3001/greenhouse/plants/', {
+    fetch(process.env.REACT_APP_SERVER_URL + 'greenhouse/plants/', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ class GreenHouse extends React.Component {
 
         response.json().then(response => {
           console.log('have the plant data')
-          console.log(response[0])
+          console.log(response)
           this.setState({plant_list: response})
         })
       }else {
@@ -79,7 +79,7 @@ class GreenHouse extends React.Component {
   getPlants = () => {
     console.log("getting ze plants")
 
-    fetch('http://localhost:3001/greenhouse/plants/' + this.state.user_email, {
+    fetch(process.env.REACT_APP_SERVER_URL + 'greenhouse/plants/' + this.state.user_email, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ class GreenHouse extends React.Component {
         plantAdd.push(plant)
 
         console.log("adding a new plant!")
-        fetch('http://localhost:3001/greenhouse/plants/', {
+        fetch(process.env.REACT_APP_SERVER_URL + 'greenhouse/plants/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -11,8 +11,7 @@ class GoogleSignIn extends React.Component {
     this.state={
       isLoggedIn: false,
       email: '',
-      name: ''
-    }
+      name: ''    }
   }
 
   loginSuccess = (response) => {
@@ -21,7 +20,7 @@ class GoogleSignIn extends React.Component {
 
     this.setState({name:response.profileObj.name, email:response.profileObj.email})
 
-    fetch('http://localhost:3001/login/user', {
+    fetch( process.env.REACT_APP_SERVER_URL + 'login/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -64,13 +63,13 @@ class GoogleSignIn extends React.Component {
           ?
 
           <Redirect to={{ pathname: '/greenhouse',
-                          state: { user_email: this.state.email } }} />
+          state: { user_email: this.state.email } }} />
 
           :
 
           <header className="Login-header">
             <GoogleLogin
-              clientId="250041201960-atfq9e4jrjb3745l87rqbq6gf3loa5in.apps.googleusercontent.com"
+              clientId={process.env.REACT_APP_CLIENT_ID}
               buttonText="Login"
               onSuccess={this.loginSuccess}
               onFailure={this.loginFailure}

@@ -11,7 +11,7 @@ class Succulent extends React.Component {
       show: false,
       show2: false,
       reminder: false
-    }
+        }
   }
 
   showModal = () => {
@@ -35,7 +35,7 @@ class Succulent extends React.Component {
   setReminder = async () => {
     await this.setState({reminder:true})
 
-      fetch('http://localhost:3001/greenhouse/plants/reminder', {
+      fetch(process.env.REACT_APP_SERVER_URL + 'greenhouse/plants/reminder', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -170,6 +170,8 @@ app.get('/greenhouse/plants/:user_email', function(req, res){
       res.status(404).json({"message":"not found - user does not exist"})
     }
 
+    console.log("the users email is" + req.params.user_email)
+
     Plant.find({ user_email: req.params.user_email }).then((result) => {
       console.log("found all the plants!" + result)
       res.status(200).json(result)
