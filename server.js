@@ -60,7 +60,7 @@ const plantData = mongoose.model('plantData', {
 
 
 // Server method to handle user login
-app.get('/login/user', function (req, res) {
+app.post('/login/user', function (req, res) {
   console.log('in server.js /login/user')
   console.log("User email is: ", req.body.email);
 
