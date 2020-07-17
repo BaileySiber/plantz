@@ -62,18 +62,18 @@ const plantData = mongoose.model('plantData', {
 // Server method to handle user login
 app.post('/login/user', function (req, res) {
   console.log('in server.js /login/user')
-
   console.log("User email is: ", req.body.email);
 
+  // If request doesn't have an email in the body, return an error message directly
   if (!req.body.email){
     res.status(400).json({ "error": "No email provided" })
     return
   }
 
   User.findOne({ email: req.body.email }).then(result => {
+    console.log(result)
 
     // If there does not exist a user in the database with the same email, create a new one
-    console.log(result)
     if (!result || result.length == 0) {
 
       new User(req.body).save().then((result) => {
@@ -93,6 +93,11 @@ app.post('/login/user', function (req, res) {
       res.status(200).json({ "message": "hello! you already exist!" })
       return
     }
+  }).catch((err) => {
+    // Return a 500 if there was a problem searching the database
+    console.log('ughhhh :( trouble searching database')
+    res.status(500).json({ "error": err.message })
+    return
   })
 
 });
@@ -107,11 +112,13 @@ app.post('/greenhouse/plants/', function(req, res) {
     console.log("Yay saved a plant!")
     // Return a 201 indicating a new plant was created
     res.status(201).json({"message":"a new plant was made woot!"})
+    return
 
   }).catch((err) => {
     console.log("darn something went wrong")
     // Return a 500 if there was a problem inserting into the database
     res.status(500).json({"error":err.message})
+    return
   })
 
 });
@@ -124,6 +131,7 @@ app.delete('/greenhouse/plants', function(req, res){
   if(!req.body.id){
     console.log("no plant id")
     res.status(400).json({"message":"bad request - no plant id"})
+    return
   }
 
   Plant.findOne({ _id: req.body.id }).then(result => {
@@ -131,20 +139,24 @@ app.delete('/greenhouse/plants', function(req, res){
     if(!result){
       console.log("no plant sad")
       res.status(404).json({"message":"not found - plant does not exist"})
+      return
     }
 
     Plant.remove({'_id':req.body.id}).then((result) => {
       console.log("in plant remove")
       res.status(202).json({"message":"plant successfully deleted"})
+      return
 
     }).catch((err) => {
       console.log("failed to remove plant")
       res.status(500).json({"error":err.message})
+      return
     })
 
   }).catch((err) => {
     console.log("failed to find one")
     res.status(500).json({"error":err.message})
+    return
   })
 
 });
@@ -157,9 +169,11 @@ app.get('/greenhouse/plants/', function(req, res) {
   plantData.find().then(result => {
     console.log("in plant list find" + result)
     res.status(200).json(result)
+    return
 
   }).catch((err => {
     res.status(500).json({"error": err.message })
+    return
   }))
 
 })
@@ -172,12 +186,14 @@ app.get('/greenhouse/plants/:user_email', function(req, res){
   if(!req.params.user_email){
     console.log("no email address provided")
     res.status(400).json({"message":"bad request - no user email"})
+    return
   }
 
   User.findOne({ email: req.params.user_email }).then(result => {
     console.log("in find user")
     if(!result){
       res.status(404).json({"message":"not found - user does not exist"})
+      return
     }
 
     console.log("the users email is" + req.params.user_email)
@@ -185,15 +201,18 @@ app.get('/greenhouse/plants/:user_email', function(req, res){
     Plant.find({ user_email: req.params.user_email }).then((result) => {
       console.log("found all the plants!" + result)
       res.status(200).json(result)
+      return
 
     }).catch((err) => {
       console.log("error finding dem little buddies ", err)
       res.status(500).json({"message":"failed to get the plants :("})
+      return
     })
 
   }).catch((err) => {
     console.log("failed to find user")
     res.status(500).json({"error": err.message})
+    return
   })
 
 });
@@ -206,6 +225,7 @@ app.post('/greenhouse/plants/reminder', function(req, res){
   if(req.body._id == null || req.body.reminder == null){
     console.log("no plant id or reminder bool provided")
     res.status(400).json({"message":"bad request - no plant id or reminder"})
+    return
   }
 
   Plant.update({ _id: req.body._id }, {
@@ -213,12 +233,15 @@ app.post('/greenhouse/plants/reminder', function(req, res){
   }).then((result) => {
     console.log("updated the plant reminder!" + result)
     res.status(200).json(result)
+    return
   }).catch((err) => {
     console.log("failed to update plant reminder" + err)
     res.status(500).json({"error": err.message})
+    return
   })
 
   res.status(500).json({"error": "something unexpected happened"})
+  return
 })
 
 // Helper function to send user email if user has plants that need watering
