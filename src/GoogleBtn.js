@@ -20,6 +20,8 @@ class GoogleSignIn extends React.Component {
 
     this.setState({name:response.profileObj.name, email:response.profileObj.email})
 
+    console.log('server url is ' + process.env.REACT_APP_SERVER_URL)
+
     fetch( process.env.REACT_APP_SERVER_URL + 'login/user', {
       method: 'POST',
       headers: {
