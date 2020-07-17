@@ -25,8 +25,8 @@ class GoogleSignIn extends React.Component {
     fetch( process.env.REACT_APP_SERVER_URL + 'login/user', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-      },
+        'Content-Type': 'application/json'
+            },
       body: JSON.stringify({
         name: response.profileObj.name,
         email: response.profileObj.email

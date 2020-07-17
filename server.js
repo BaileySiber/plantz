@@ -8,11 +8,10 @@ var nodemailer = require('nodemailer');
 
 
 // Setup Ssrver packages/configuration
-app.use(cors());
+app.options('*', cors())
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json())
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
-
 
 // Creation of an object to send emails
 var transporter = nodemailer.createTransport({
