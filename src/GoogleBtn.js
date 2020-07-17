@@ -23,7 +23,7 @@ class GoogleSignIn extends React.Component {
     console.log('server url is ' + process.env.REACT_APP_SERVER_URL)
 
     fetch( process.env.REACT_APP_SERVER_URL + 'login/user', {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
