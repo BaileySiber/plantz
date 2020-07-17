@@ -1,7 +1,7 @@
 import React from 'react'
 import plant from './plant.gif'
 import './Home.css';
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import GoogleSignIn from './GoogleBtn';
 
 

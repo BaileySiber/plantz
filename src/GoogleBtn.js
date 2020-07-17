@@ -1,7 +1,7 @@
 import React from 'react'
 import GoogleLogin from 'react-google-login';
-import GreenHouse from './GreenHouse';
-import { Link, Redirect } from 'react-router-dom'
+// import GreenHouse from './GreenHouse';
+import { Redirect } from 'react-router-dom'
 
 
 class GoogleSignIn extends React.Component {

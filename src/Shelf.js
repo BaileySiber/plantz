@@ -1,8 +1,7 @@
 import React from 'react'
-import { Modal, Button } from 'react-bootstrap'
 import './Shelf.css';
 import Succulent from './Succulent.js'
-import Leafy from './Leafy.js'
+// import Leafy from './Leafy.js'
 import Flower from './Flower.js'
 
 class Shelf extends React.Component {

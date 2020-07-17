@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Button, Form } from 'react-bootstrap'
+import { Modal, Button } from 'react-bootstrap'
 import './Flower.css'
 import raindrop from './drops.png'
 
@@ -101,7 +101,7 @@ class Succulent extends React.Component {
               Close
             </Button>
             <Button className="water" onClick={this.hideModalShowSecond}>
-              <img className="raindrop" src={raindrop} />
+              <img alt="raindrop" className="raindrop" src={raindrop} />
             </Button>
           </Modal.Footer>
         </Modal>

@@ -105,12 +105,12 @@ class GreenHouse extends React.Component {
 
     console.log('in add plant')
 
-    if(this.state.common_name == 0){
+    if(this.state.common_name === 0){
       alert('Please fill in name!')
       return
     }
 
-    if(this.state.assigned_name == 0){
+    if(this.state.assigned_name === 0){
       alert('Please fill in assigned name')
       return
     }
