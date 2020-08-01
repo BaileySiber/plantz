@@ -16,25 +16,7 @@
     "mongoose": "^5.9.13",
     "node-sass": "^4.14.1",
     "nodemailer": "^6.4.6",
-    "path": "^0.12.7",
-    "react": "^16.13.1",
-    "react-awesome-button": "^6.5.1",
-    "react-bootstrap": "^1.0.1",
-    "react-dom": "^16.13.1",
-    "react-google-button": "^0.7.1",
-    "react-google-login": "^5.1.14",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.1",
-    "react-search-autocomplete": "^1.0.6"
-  },
-  "scripts": {
-    "start": "concurrently -k 'node server.js' 'react-scripts start'",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "path": "^0.12.7"
   },
   "browserslist": {
     "production": [
