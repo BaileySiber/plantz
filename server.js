@@ -8,7 +8,7 @@ var nodemailer = require('nodemailer');
 
 
 // Setup Ssrver packages/configuration
-app.options('*', cors())
+app.use(cors())
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json())
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
