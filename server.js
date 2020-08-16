@@ -231,6 +231,7 @@ app.post('/greenhouse/plants/reminder', function(req, res){
     reminder: req.body.reminder
   }).then((result) => {
     console.log("updated the plant reminder!" + result)
+    console.log("updated the plant reminder!")
     res.status(200).json(result)
     return
   }).catch((err) => {
