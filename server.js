@@ -252,7 +252,7 @@ var sendWateringReminder = (user, userPlants) => {
     currentPlant = userPlants[i]
     console.log("Current plant is: ", currentPlant)
 
-    if (currentPlant.reminder){
+    if (currentPlant.reminder === "True"){
       console.log("watering reminder is on")
       lastWatered = currentPlant.last_watered
       water_freq  = currentPlant.plant_data.watering_frequency
