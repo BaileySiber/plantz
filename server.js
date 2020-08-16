@@ -114,7 +114,7 @@ app.post('/greenhouse/plants/', function(req, res) {
     return
 
   }).catch((err) => {
-    console.log("darn something went wrong")
+    console.log("darn something went wrong" + err.message)
     // Return a 500 if there was a problem inserting into the database
     res.status(500).json({"error":err.message})
     return
