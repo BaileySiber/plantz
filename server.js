@@ -42,7 +42,7 @@ const Plant = mongoose.model('Plant', {
     watering_frequency: Number,
     watering_amount: String
   },
-  reminder: Boolean,
+  reminder: String,
   last_watered: Date
 })
 
