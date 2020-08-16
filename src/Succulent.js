@@ -33,7 +33,7 @@ class Succulent extends React.Component {
   }
 
   setReminder = async () => {
-    await this.setState({reminder:true})
+    await this.setState({reminder:"True"})
 
       fetch(process.env.REACT_APP_SERVER_URL + 'greenhouse/plants/reminder', {
         method: 'POST',
