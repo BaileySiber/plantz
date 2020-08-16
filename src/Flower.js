@@ -10,7 +10,7 @@ class Succulent extends React.Component {
     this.state={
       show: false,
       show2: false,
-      reminder: false
+      reminder: ""
         }
   }
 
