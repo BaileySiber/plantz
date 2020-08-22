@@ -353,7 +353,7 @@ var sendReminder = () => {
 
 //run sendWatering Reminder once a day every day to trigger emails
 // setInterval(sendReminder, 86400000);
-setInterval(sendReminder, 300000);
+setInterval(sendReminder, 60000);
 
 var http = require("http");
 setInterval(function() {
