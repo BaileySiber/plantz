@@ -343,6 +343,10 @@ var sendReminder = () => {
 //run sendWatering Reminder once a day every day to trigger emails
 setInterval(sendReminder, 86400000);
 
+var http = require("http");
+setInterval(function() {
+    http.get(process.env.SERVER_URL + "/greenhouse/plants");
+}, 1500000);
 
 app.listen(process.env.PORT || 3001, function () {
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
