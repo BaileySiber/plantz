@@ -134,7 +134,9 @@ class GreenHouse extends React.Component {
           body: JSON.stringify({
             user_email: this.state.user_email,
             assigned_name: this.state.assigned_name,
-            plant_data: plant
+            plant_data: plant,
+            last_watered: null,
+            reminder: "False",
           })
         })
         .then(response => {
