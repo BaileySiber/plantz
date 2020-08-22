@@ -279,12 +279,15 @@ var sendWateringReminder = (user, userPlants) => {
     }else{console.log("watering reminder is off")}
   }
 
+  console.log("The length of thirsty plants is: ", thirstyPlants.length)
+
   if (thirstyPlants.length != 0){
+    console.log("Found some thirrrrrsty plants")
     var emailText = 'These plants are thiiiiiiiirsty\n'
     for (i = 0; i < thirstyPlants.length; i++) {
       emailText += thirstyPlants[i].assigned_name + '\n'
     }
-
+    console.log("Email text is:\n", emailText)
     var mailOptions = {
       from:    process.env.EMAIL_USER,
       to:      user.email,
