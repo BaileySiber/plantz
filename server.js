@@ -239,11 +239,43 @@ app.post('/greenhouse/plants/reminder', function(req, res){
     return
   })
 })
+//
+// // Helper function to send user email if user has plants that need watering
+// var sendWateringReminder = (user, userPlants) => {
+//
+// }
 
-// Helper function to send user email if user has plants that need watering
-var sendWateringReminder = (user, userPlants) => {
-  console.log('sending watering reminder for user')
+var sendEmailToUser = (userEmail, thirstyPlants) => {
+  console.log("The length of thirsty plants is: ", thirstyPlants.length)
 
+  if (thirstyPlants.length != 0){
+    console.log("Found some thirrrrrsty plants")
+    var emailText = 'These plants are thiiiiiiiirsty\n'
+    for (i = 0; i < thirstyPlants.length; i++) {
+      emailText += thirstyPlants[i].assigned_name + '\n'
+    }
+    console.log("Email text is:\n", emailText)
+    var mailOptions = {
+      from:    process.env.EMAIL_USER,
+      to:      userEmail,
+      subject: 'Reminder - It is Time to water your plants!',
+      text:    emailText
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+        return false;
+      } else {
+        console.log('Email sent: ' + info.response);
+        return true;
+      }
+    });
+  }
+}
+
+
+var getThirstyPlants = (userPlants, userEmail, callback) => {
   thirstyPlants = []
   for (i = 0; i < userPlants.length; i++) {
     currentPlant = userPlants[i]
@@ -278,49 +310,25 @@ var sendWateringReminder = (user, userPlants) => {
 
     }else{console.log("watering reminder is off")}
   }
-
-  console.log("The length of thirsty plants is: ", thirstyPlants.length)
-
-  if (thirstyPlants.length != 0){
-    console.log("Found some thirrrrrsty plants")
-    var emailText = 'These plants are thiiiiiiiirsty\n'
-    for (i = 0; i < thirstyPlants.length; i++) {
-      emailText += thirstyPlants[i].assigned_name + '\n'
-    }
-    console.log("Email text is:\n", emailText)
-    var mailOptions = {
-      from:    process.env.EMAIL_USER,
-      to:      user.email,
-      subject: 'Reminder - It is Time to water your plants!',
-      text:    emailText
-    };
-
-    transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        console.log(error);
-        return false;
-      } else {
-        console.log('Email sent: ' + info.response);
-        return true;
-      }
-    });
-  }
-
+  console.log("Attempting to send email to: ", userEmail)
+  callback(userEmail, thirstyPlants)
 }
 
 // Helper function to get all plants for given user
 var getUserPlants = (user, callback) => {
+  console.log("Finding all user plants in getUserPlants")
 
-  console.log("Finding all plants in helper function")
-
-  Plant.find({ user_email: user.email }).then((result) => {
-    console.log("finded all dem planties" + result)
-    callback(user, result)
-
+  Plant.find({ user_email: user.email }).then((userPlants) => {
+    console.log("finded all dem user planties:")
+    console.log(userPlants)
+    callback(userPlants, user.email, sendEmailToUser)
   }).catch((err) => {
-    console.log("error finding user plants: ", err)
-    // TODO: handle this better
-    callback(user, result)
+  // TODO: handle this better
+    console.log("error finding user plants")
+    console.log("User:")
+    console.log(user)
+    console.log("Error:")
+    console.log(err)
   })
 
 }
@@ -335,7 +343,7 @@ var sendReminder = () => {
     console.log("found all the peoples!" + result)
 
     for (i = 0; i < result.length; i++) {
-      getUserPlants(result[i], sendWateringReminder)
+      getUserPlants(result[i], getThirstyPlants)
     }
   }).catch((err) => {
     console.log(err);
@@ -345,7 +353,7 @@ var sendReminder = () => {
 
 //run sendWatering Reminder once a day every day to trigger emails
 // setInterval(sendReminder, 86400000);
-setInterval(sendReminder, 60000);
+setInterval(sendReminder, 300000);
 
 var http = require("http");
 setInterval(function() {
