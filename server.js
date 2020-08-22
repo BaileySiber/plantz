@@ -271,6 +271,20 @@ var sendEmailToUser = (userEmail, thirstyPlants) => {
         return true;
       }
     });
+
+    var today = new Date()
+    for (i = 0; i < thirstyPlants.length; i++) {
+      currentPlant = thirstyPlants[i]
+      Plant.update({ _id: currentPlant._id }, {
+        last_watered: today
+      }).then((result) => {
+        console.log("updated the plant!")
+        console.log(result)
+        console.log("")
+      }).catch((err) => {
+        console.log("failed to update plant" + err)
+      })
+    }
   }
 }
 
@@ -296,21 +310,13 @@ var getThirstyPlants = (userPlants, userEmail, callback) => {
         currentPlant.last_watered = today
         console.log('todays last watered is ' +   currentPlant.last_watered)
         console.log('plant _id ' +   currentPlant._id)
-
-        Plant.update({ _id: currentPlant._id }, {
-          last_watered: today
-        }).then((result) => {
-          console.log("updated the plant!" + result)
-          thirstyPlants.push(currentPlant)
-        }).catch((err) => {
-          console.log("failed to update plant" + err)
-        })
-
+        thirstyPlants.push(currentPlant)
       }else {console.log("you're a buttface")}
 
     }else{console.log("watering reminder is off")}
   }
   console.log("Attempting to send email to: ", userEmail)
+  console.log("Before sending, the length of thistyPlants is: ", thirstyPlants.length)
   callback(userEmail, thirstyPlants)
 }
 
