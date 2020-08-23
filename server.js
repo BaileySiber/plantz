@@ -239,11 +239,6 @@ app.post('/greenhouse/plants/reminder', function(req, res){
     return
   })
 })
-//
-// // Helper function to send user email if user has plants that need watering
-// var sendWateringReminder = (user, userPlants) => {
-//
-// }
 
 var sendEmailToUser = (userEmail, thirstyPlants) => {
   console.log("The length of thirsty plants is: ", thirstyPlants.length)
@@ -358,8 +353,7 @@ var sendReminder = () => {
 }
 
 //run sendWatering Reminder once a day every day to trigger emails
-// setInterval(sendReminder, 86400000);
-setInterval(sendReminder, 60000);
+setInterval(sendReminder, 86400000);
 
 var http = require("http");
 setInterval(function() {
