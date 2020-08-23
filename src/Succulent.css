@@ -27,6 +27,16 @@ Modal {
   border-color: #81b2b2;
 }
 
+.delete {
+  background-color: #b2b2b2;
+  border-color: #b2b2b2;
+}
+
+.delete:hover {
+  background-color: #cccccc;
+  border-color: #b2b2b2;
+}
+
 .underline {
   font-family: 'Eczar', serif;
   border-bottom: 2px solid #B3D0C2;

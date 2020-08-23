@@ -8,10 +8,17 @@ class Shelf extends React.Component {
 
   constructor(props){
     super(props);
+    this.rerenderShelfCallback = this.rerenderShelfCallback.bind(this);
     this.state={
-      show: false
+      show: false,
     }
   }
+
+  rerenderShelfCallback = (plant) => {
+    var plantIndex = this.props.plants.indexOf(plant)
+    this.props.plants.splice(plantIndex, 1)
+    this.forceUpdate()
+ }
 
   render() {
 
@@ -27,13 +34,13 @@ class Shelf extends React.Component {
         console.log("Got a fern!")
 
         rendered_plants.push(
-          <div class="bottom_stats_data_secs"><Flower plant={plant}/></div>
+          <div class="bottom_stats_data_secs"><Flower rerenderShelfCallback={this.rerenderShelfCallback} plant={plant}/></div>
         )
       } else if(plant.plant_data.plant_type === "Succulent"){
         console.log("succulent!" + plant.assigned_name)
 
         rendered_plants.push(
-          <div class="bottom_stats_data_secs"><Succulent plant={plant}/></div>
+          <div class="bottom_stats_data_secs"><Succulent rerenderShelfCallback={this.rerenderShelfCallback} plant={plant}/></div>
         )
       } else {
         console.log("unrecognized plant type: ", this.plant_data.plant_type)

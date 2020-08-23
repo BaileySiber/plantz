@@ -17,6 +17,16 @@ Modal {
   padding-left: 1%;
 }
 
+.delete {
+  background-color: #b2b2b2;
+  border-color: #b2b2b2;
+}
+
+.delete:hover {
+  background-color: #cccccc;
+  border-color: #b2b2b2;
+}
+
 .water {
   background-color: #81b2b2;
   border-color: #81b2b2;
