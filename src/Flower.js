@@ -145,6 +145,29 @@ class Succulent extends React.Component {
           </Modal.Footer>
         </Modal>
 
+        {this.state.reminder ?
+
+        <Modal show={this.state.show2} onHide={this.hideSecondModal}>
+          <Modal.Header closeButton>
+            <Modal.Title class="modal-t">
+              {this.props.plant.assigned_name}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body class="modal-b">
+            <p>you have a reminder set...do you want to remove reminder?</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button className="secondary" onClick={this.hideSecondModal}>
+              Nah
+            </Button>
+            <Button className="primary" onClick={this.setReminder}>
+              Yes!
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        :
+
         <Modal show={this.state.show2} onHide={this.hideSecondModal}>
           <Modal.Header closeButton>
             <Modal.Title class="modal-t">
@@ -163,6 +186,9 @@ class Succulent extends React.Component {
             </Button>
           </Modal.Footer>
         </Modal>
+
+      }
+
 
       <Modal show={this.state.show3} onHide={this.hideThirdModal}>
         <Modal.Header closeButton>
